@@ -1,0 +1,45 @@
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.display {
+    height: 80px;
+    text-align: right;
+    font-size: 24px;
+}
+
+.calculator-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+.num-block {
+    display: flex;
+    flex-wrap: wrap;
+    width: 240px;
+}
+
+.function-block {
+    width: 80px;
+}
+
+.buttons {
+    display: flex;
+}
+
+button {
+    width:80px;
+    height: 46px;
+    padding: 0;
+}
