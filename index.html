@@ -10,7 +10,7 @@
 <body>
     <div class="calculator-container">
         <input class="expr-display" readonly>
-        <input class="display" readonly>
+        <input class="result-display" readonly>
         <input class="expr-field">
         <div class="buttons">
             <div class="num-block">
@@ -25,16 +25,16 @@
                 <button class="number">3</button>
                 <button>.</button>
                 <button class="number">0</button>
-                <button>=</button>
+                <button id="equals">=</button>
             </div>
-            <div class="function-block">
-                <button>+</button>
-                <button>-</button>
-                <button>*</button>
-                <button>/</button>
+            <div class="operator-block">
+                <button class="operator">+</button>
+                <button class="operator">-</button>
+                <button class="operator">*</button>
+                <button class="operator">/</button>
             </div>
         </div>
-        <button>C</button>
+        <button id="clear">C</button>
     </div>
 </body>
 </html>

@@ -19,7 +19,7 @@ body {
     color: gray;
 }
 
-.display {
+.result-display {
     height: 80px;
     font-size: 24px;
     text-align: right;
@@ -37,7 +37,7 @@ body {
     width: 240px;
 }
 
-.function-block {
+.operator-block {
     width: 80px;
 }
 
