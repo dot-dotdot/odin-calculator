@@ -1,11 +1,10 @@
 "use strict";
 
-let firstOperand = 0;
-let secondOperand = 0;
-let result = 0;
-let operandString = "";
-let operatorString = "";
-let waitingForNextOperand = false;
+let currentTerm = "";
+let previousTerm = "";
+let result = "";
+let currentOperator = null;
+let previousOperator = null;
 
 const exprDisplay = document.querySelector(".expr-display");
 const resultDisplay = document.querySelector(".result-display");
@@ -19,42 +18,48 @@ resultDisplay.value = "";
 
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
-        operandString += button.textContent;
-        resultDisplay.value = operandString;
+        currentTerm += button.textContent;
+        resultDisplay.value = currentTerm;
     });
 });
 
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
-        if (!waitingForNextOperand) {
-            waitingForNextOperand = true;
-            firstOperand = +operandString;
-        } else {
-            secondOperand = +operandString;
-            result = calculate(firstOperand, secondOperand);
-            resultDisplay.value = result;
-            firstOperand = result;
+        if (currentTerm === "" && previousTerm === "") return;
+
+        previousOperator = currentOperator;
+        currentOperator = button.textContent;
+        
+        if (currentTerm !== "" && previousTerm === "") {
+            previousTerm = currentTerm;
+            exprDisplay.value = previousTerm + " " + currentOperator;
+        } else if (currentTerm !== "" && previousTerm !== "") {
+            previousTerm = "" + calculate(+previousTerm, +currentTerm, previousOperator);
+            exprDisplay.value = previousTerm + " " + currentOperator; 
+            resultDisplay.value = previousTerm;
         }
 
-        operatorString = button.textContent;
-        operandString = "";
+        currentTerm = "";
     });
 });
 
 equalsButton.addEventListener("click", () => {
-    waitingForNextOperand = false;
-    secondOperand = +operandString;
-    result = calculate(firstOperand, secondOperand);
-    resultDisplay.value = result;
+    if (currentTerm !== "" && previousTerm !== "" && currentOperator) {
+        result = "" + calculate(+previousTerm, +currentTerm, currentOperator);
+        exprDisplay.value = previousTerm + " " + currentOperator + " " + currentTerm + "=";
+        resultDisplay.value = result;
+        previousTerm = result;
+        currentTerm = "";
+    }
 })
 
-clearButton.addEventListener("click", () => reset());
+// clearButton.addEventListener("click", () => reset());
 
-function calculate(a, b) {
-    if (operatorString === "+") return add(a, b);        
-    if (operatorString === "-") return substract(a, b);
-    if (operatorString === "*") return multiply(a, b);
-    if (operatorString === "/") return divide(a, b);
+function calculate(a, b, operator) {
+    if (operator === "+") return add(a, b);        
+    if (operator === "-") return substract(a, b);
+    if (operator === "*") return multiply(a, b);
+    if (operator === "/") return divide(a, b);
 }
 
 function add(a, b) {
@@ -73,18 +78,4 @@ function divide(a, b) {
     if (b !== 0) {
         return a / b;
     }
-}
-
-function clear() {
-    firstOperand = 0;
-    secondOperand = 0;
-    operandString = "";
-    operatorString = "";
-}
-
-function reset() {
-    clear();
-    exprDisplay.value = "";
-    resultDisplay.value = "";
-    waitingForNextOperand = false;
 }
