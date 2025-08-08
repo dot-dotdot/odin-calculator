@@ -14,7 +14,7 @@ const clearButton = document.querySelector("#clear");
 const equalsButton = document.querySelector("#equals");
 
 exprDisplay.value = "";
-resultDisplay.value = "";
+resultDisplay.value = "0";
 
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -46,14 +46,14 @@ operatorButtons.forEach(button => {
 equalsButton.addEventListener("click", () => {
     if (currentTerm !== "" && previousTerm !== "" && currentOperator) {
         result = "" + calculate(+previousTerm, +currentTerm, currentOperator);
-        exprDisplay.value = previousTerm + " " + currentOperator + " " + currentTerm + "=";
+        exprDisplay.value = previousTerm + " " + currentOperator + " " + currentTerm + " =";
         resultDisplay.value = result;
         previousTerm = result;
         currentTerm = "";
     }
 })
 
-// clearButton.addEventListener("click", () => reset());
+clearButton.addEventListener("click", () => reset());
 
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        
@@ -78,4 +78,13 @@ function divide(a, b) {
     if (b !== 0) {
         return a / b;
     }
+}
+
+function reset() {
+    currentTerm = "";
+    previousTerm = "";
+    currentOperator = null;
+    previousOperator = null;
+    exprDisplay.value = "";
+    resultDisplay.value = "0";
 }
