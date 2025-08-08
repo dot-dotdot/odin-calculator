@@ -5,6 +5,7 @@ let previousTerm = "";
 let result = "";
 let currentOperator = null;
 let previousOperator = null;
+let finishedEvaluation = false;
 
 const exprDisplay = document.querySelector(".expr-display");
 const resultDisplay = document.querySelector(".result-display");
@@ -18,6 +19,14 @@ resultDisplay.value = "0";
 
 numberButtons.forEach(button => {
     button.addEventListener("click", () => {
+        if (finishedEvaluation) {
+            currentTerm = "";
+            previousTerm = "";
+            currentOperator = null;
+            finishedEvaluation = false;
+            exprDisplay.value = "";
+        }
+
         currentTerm += button.textContent;
         resultDisplay.value = currentTerm;
     });
@@ -38,8 +47,9 @@ operatorButtons.forEach(button => {
             exprDisplay.value = previousTerm + " " + currentOperator; 
             resultDisplay.value = previousTerm;
         }
-
+       
         currentTerm = "";
+        finishedEvaluation = false;
     });
 });
 
@@ -50,6 +60,7 @@ equalsButton.addEventListener("click", () => {
         resultDisplay.value = result;
         previousTerm = result;
         currentTerm = "";
+        finishedEvaluation = true;
     }
 })
 
@@ -83,6 +94,7 @@ function divide(a, b) {
 function reset() {
     currentTerm = "";
     previousTerm = "";
+    result = "";
     currentOperator = null;
     previousOperator = null;
     exprDisplay.value = "";
