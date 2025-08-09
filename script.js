@@ -14,56 +14,40 @@ const operatorButtons = document.querySelectorAll(".operator");
 const clearButton = document.querySelector("#clear");
 const equalsButton = document.querySelector("#equals");
 const decimalButton = document.querySelector("#decimal");
+const negationButton = document.querySelector("#negation");
 
 exprDisplay.value = "";
 resultDisplay.value = "0";
 
 numberButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        if (finishedEvaluation) {
-            currentTerm = "";
-            previousTerm = "";
-            currentOperator = null;
-            finishedEvaluation = false;
-            exprDisplay.value = "";
-        }
-
-        currentTerm += button.textContent;
-        resultDisplay.value = currentTerm;
-    });
+    button.addEventListener("click", () => handleNumber(button));
 });
-
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => setOperator(button));
 });
-
-equalsButton.addEventListener("click", () => {
-    if (currentTerm !== "" && previousTerm !== "" && currentOperator) {
-        lastOperator = currentOperator;
-        lastTerm = currentTerm;
-        const result = calculate(+previousTerm, +currentTerm, currentOperator);
-        exprDisplay.value = `${previousTerm} ${currentOperator} ${currentTerm} =`;
-        resultDisplay.value = result;
-        previousTerm = String(result);
-        currentTerm = "";
-        currentOperator = null;
-        finishedEvaluation = true;
-    } else if (finishedEvaluation && lastOperator && lastTerm) {
-        const result = calculate(+previousTerm, +lastTerm, lastOperator);
-        exprDisplay.value = `${previousTerm} ${lastOperator} ${lastTerm} =`;
-        resultDisplay.value = result;
-        previousTerm = String(result);
-    }
-});
-
+equalsButton.addEventListener("click", handleEquals); 
 clearButton.addEventListener("click", reset);
 decimalButton.addEventListener("click", addDecimal);
+negationButton.addEventListener("click", negate);
 
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        
     if (operator === "-") return substract(a, b);
     if (operator === "*") return multiply(a, b);
     if (operator === "/") return divide(a, b);
+}
+
+function handleNumber(button) {
+    if (finishedEvaluation) {
+        currentTerm = "";
+        previousTerm = "";
+        currentOperator = null;
+        finishedEvaluation = false;
+        exprDisplay.value = "";
+    }
+
+    currentTerm += button.textContent;
+    resultDisplay.value = currentTerm;
 }
 
 function setOperator(button) {
@@ -87,11 +71,30 @@ function setOperator(button) {
         currentOperator = operator;
         exprDisplay.value = previousTerm + " " + currentOperator;
     } else if (currentTerm !== "" && previousTerm !== "") {
-        previousTerm = "" + calculate(+previousTerm, +currentTerm, currentOperator);
+        previousTerm = String(calculate(+previousTerm, +currentTerm, currentOperator));
         currentTerm = "";
         currentOperator = operator;
         exprDisplay.value = previousTerm + " " + currentOperator; 
         resultDisplay.value = previousTerm;
+    }
+}
+
+function handleEquals() {
+    if (currentTerm !== "" && previousTerm !== "" && currentOperator) {
+        lastOperator = currentOperator;
+        lastTerm = currentTerm;
+        const result = calculate(+previousTerm, +currentTerm, currentOperator);
+        exprDisplay.value = `${previousTerm} ${currentOperator} ${currentTerm} =`;
+        resultDisplay.value = result;
+        previousTerm = String(result);
+        currentTerm = "";
+        currentOperator = null;
+        finishedEvaluation = true;
+    } else if (finishedEvaluation && lastOperator && lastTerm) {
+        const result = calculate(+previousTerm, +lastTerm, lastOperator);
+        exprDisplay.value = `${previousTerm} ${lastOperator} ${lastTerm} =`;
+        resultDisplay.value = result;
+        previousTerm = String(result);
     }
 }
 
@@ -108,6 +111,16 @@ function addDecimal() {
     if (!currentTerm.includes(".")) {
         currentTerm = currentTerm === "" ? "0." : currentTerm + ".";
         resultDisplay.value = currentTerm;
+    }
+}
+
+function negate() {
+    if (currentTerm) {
+        currentTerm = String(parseFloat(currentTerm) * -1);
+        resultDisplay.value = currentTerm;
+    } else if (previousTerm && !currentTerm) {
+        previousTerm = String(parseFloat(previousTerm) * -1);
+        exprDisplay.value = previousTerm;
     }
 }
 
