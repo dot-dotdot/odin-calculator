@@ -54,7 +54,3 @@ button {
 .bottom-row {
     display: flex;
 }
-
-#equals {
-    flex-grow: 1;
-}

@@ -16,6 +16,7 @@ const decimalButton = document.querySelector("#decimal");
 const negationButton = document.querySelector("#negation");
 const clearButton = document.querySelector("#clear");
 const ceButton = document.querySelector("#clear-entry");
+const eraseButton = document.querySelector("#erase");
 
 exprDisplay.value = "";
 resultDisplay.value = "0";
@@ -34,6 +35,16 @@ ceButton.addEventListener("click", () => {
     currentTerm = "";
     resultDisplay.value = "0";
 });
+eraseButton.addEventListener("click", () => {
+    if (currentTerm !== "") {
+        currentTerm = currentTerm.slice(0, -1);
+        resultDisplay.value = currentTerm;
+
+        if (currentTerm === "") {
+            resultDisplay.value = "0";
+        }
+    }
+})
 
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        
