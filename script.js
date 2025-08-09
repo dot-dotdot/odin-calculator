@@ -13,6 +13,7 @@ const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
 const clearButton = document.querySelector("#clear");
 const equalsButton = document.querySelector("#equals");
+const decimalButton = document.querySelector("#decimal");
 
 exprDisplay.value = "";
 resultDisplay.value = "0";
@@ -64,13 +65,30 @@ equalsButton.addEventListener("click", () => {
     }
 })
 
-clearButton.addEventListener("click", () => reset());
+clearButton.addEventListener("click", reset);
+decimalButton.addEventListener("click", addDecimal);
 
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        
     if (operator === "-") return substract(a, b);
     if (operator === "*") return multiply(a, b);
     if (operator === "/") return divide(a, b);
+}
+
+function addDecimal() {
+    if (finishedEvaluation) {
+        currentTerm = "0.";
+        previousTerm = "";
+        currentOperator = null;
+        finishedEvaluation = false;
+        resultDisplay.value = currentTerm;
+        return;
+    }
+
+    if (!currentTerm.includes(".")) {
+        currentTerm = currentTerm === "" ? "0." : currentTerm + ".";
+        resultDisplay.value = currentTerm;
+    }
 }
 
 function add(a, b) {
