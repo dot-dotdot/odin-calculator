@@ -81,17 +81,17 @@ function setOperator(button) {
         exprDisplay.value = `${previousTerm} ${currentOperator}`;
     } else if (currentTerm === "" && previousTerm !== "") {
         currentOperator = operator;
-        exprDisplay.value = previousTerm + " " + currentOperator; 
+        setExprDisplayValue(previousTerm, currentOperator); 
     } else if (currentTerm !== "" && previousTerm === "") {
         previousTerm = currentTerm;
         currentTerm = "";
         currentOperator = operator;
-        exprDisplay.value = previousTerm + " " + currentOperator;
+        setExprDisplayValue(previousTerm, currentOperator);
     } else if (currentTerm !== "" && previousTerm !== "") {
         previousTerm = String(calculate(+previousTerm, +currentTerm, currentOperator));
         currentTerm = "";
         currentOperator = operator;
-        exprDisplay.value = previousTerm + " " + currentOperator; 
+        setExprDisplayValue(previousTerm, currentOperator); 
         resultDisplay.value = previousTerm;
     }
 }
@@ -101,7 +101,7 @@ function handleEquals() {
         lastOperator = currentOperator;
         lastTerm = currentTerm;
         const result = calculate(+previousTerm, +currentTerm, currentOperator);
-        exprDisplay.value = `${previousTerm} ${currentOperator} ${currentTerm} =`;
+        setExprDisplayValue(previousTerm, currentOperator, currentTerm);
         resultDisplay.value = result;
         previousTerm = String(result);
         currentTerm = "";
@@ -109,7 +109,7 @@ function handleEquals() {
         finishedEvaluation = true;
     } else if (finishedEvaluation && lastOperator && lastTerm) {
         const result = calculate(+previousTerm, +lastTerm, lastOperator);
-        exprDisplay.value = `${previousTerm} ${lastOperator} ${lastTerm} =`;
+        setExprDisplayValue(previousTerm, currentOperator, currentTerm);
         resultDisplay.value = result;
         previousTerm = String(result);
     }
@@ -135,9 +135,14 @@ function negate() {
     if (currentTerm) {
         currentTerm = String(parseFloat(currentTerm) * -1);
         resultDisplay.value = currentTerm;
-    } else if (previousTerm && !currentTerm) {
-        previousTerm = String(parseFloat(previousTerm) * -1);
-        exprDisplay.value = previousTerm;
+    } 
+}
+
+function setExprDisplayValue(term1, operator, term2) {
+    if (typeof term2 === "undefined") {
+        exprDisplay.value = `${term1} ${operator}`;
+    } else {
+        exprDisplay.value = `${term1} ${operator} ${term2} =`;
     }
 }
 
