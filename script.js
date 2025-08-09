@@ -77,39 +77,35 @@ function setOperator(button) {
 
     if (currentTerm ==="" && previousTerm === "") {
         previousTerm = "0";
-        currentOperator = operator;
-        exprDisplay.value = `${previousTerm} ${currentOperator}`;
-    } else if (currentTerm === "" && previousTerm !== "") {
-        currentOperator = operator;
-        setExprDisplayValue(previousTerm, currentOperator); 
     } else if (currentTerm !== "" && previousTerm === "") {
         previousTerm = currentTerm;
         currentTerm = "";
-        currentOperator = operator;
-        setExprDisplayValue(previousTerm, currentOperator);
     } else if (currentTerm !== "" && previousTerm !== "") {
         previousTerm = String(calculate(+previousTerm, +currentTerm, currentOperator));
         currentTerm = "";
-        currentOperator = operator;
-        setExprDisplayValue(previousTerm, currentOperator); 
         resultDisplay.value = previousTerm;
     }
+
+    currentOperator = operator;
+    setExprDisplayValue(previousTerm, currentOperator); 
 }
 
 function handleEquals() {
     if (currentTerm !== "" && previousTerm !== "" && currentOperator) {
         lastOperator = currentOperator;
         lastTerm = currentTerm;
+        
         const result = calculate(+previousTerm, +currentTerm, currentOperator);
         setExprDisplayValue(previousTerm, currentOperator, currentTerm);
         resultDisplay.value = result;
         previousTerm = String(result);
+
         currentTerm = "";
         currentOperator = null;
         finishedEvaluation = true;
     } else if (finishedEvaluation && lastOperator && lastTerm) {
         const result = calculate(+previousTerm, +lastTerm, lastOperator);
-        setExprDisplayValue(previousTerm, currentOperator, currentTerm);
+        setExprDisplayValue(previousTerm, lastOperator, lastTerm);
         resultDisplay.value = result;
         previousTerm = String(result);
     }
@@ -131,11 +127,12 @@ function addDecimal() {
     }
 }
 
+// This is the most basic negation function. Only works with user input form numpad.
 function negate() {
     if (currentTerm) {
         currentTerm = String(parseFloat(currentTerm) * -1);
         resultDisplay.value = currentTerm;
-    } 
+    }
 }
 
 function setExprDisplayValue(term1, operator, term2) {
