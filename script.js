@@ -2,10 +2,10 @@
 
 let currentTerm = "";
 let previousTerm = "";
-let result = "";
 let currentOperator = null;
-let previousOperator = null;
 let finishedEvaluation = false;
+let lastOperator = null;
+let lastTerm = null;
 
 const exprDisplay = document.querySelector(".expr-display");
 const resultDisplay = document.querySelector(".result-display");
@@ -39,13 +39,20 @@ operatorButtons.forEach(button => {
 
 equalsButton.addEventListener("click", () => {
     if (currentTerm !== "" && previousTerm !== "" && currentOperator) {
-        result = "" + calculate(+previousTerm, +currentTerm, currentOperator);
-        exprDisplay.value = previousTerm + " " + currentOperator + " " + currentTerm + " =";
+        lastOperator = currentOperator;
+        lastTerm = currentTerm;
+        const result = calculate(+previousTerm, +currentTerm, currentOperator);
+        exprDisplay.value = `${previousTerm} ${currentOperator} ${currentTerm} =`;
         resultDisplay.value = result;
-        previousTerm = result;
+        previousTerm = String(result);
         currentTerm = "";
         currentOperator = null;
         finishedEvaluation = true;
+    } else if (finishedEvaluation && lastOperator && lastTerm) {
+        const result = calculate(+previousTerm, +lastTerm, lastOperator);
+        exprDisplay.value = `${previousTerm} ${lastOperator} ${lastTerm} =`;
+        resultDisplay.value = result;
+        previousTerm = String(result);
     }
 });
 
@@ -125,9 +132,9 @@ function divide(a, b) {
 function reset() {
     currentTerm = "";
     previousTerm = "";
-    result = "";
+    lastTerm = null;
+    lastOperator = null;
     currentOperator = null;
-    previousOperator = null;
     exprDisplay.value = "";
     resultDisplay.value = "0";
 }
