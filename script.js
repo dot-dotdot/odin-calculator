@@ -25,16 +25,22 @@ numberButtons.forEach(button => {
     button.addEventListener("click", () => handleNumber(button));
 });
 operatorButtons.forEach(button => {
-    button.addEventListener("click", () => setOperator(button));
+    button.addEventListener("click", () => {
+        setOperator(button);
+        finishedEvaluation = false;
+    });
 });
+
 equalsButton.addEventListener("click", handleEquals); 
 decimalButton.addEventListener("click", addDecimal);
 negationButton.addEventListener("click", negate);
 clearButton.addEventListener("click", reset);
+
 ceButton.addEventListener("click", () => {
     currentTerm = "";
     resultDisplay.value = "0";
 });
+
 eraseButton.addEventListener("click", () => {
     if (currentTerm !== "") {
         currentTerm = currentTerm.slice(0, -1);
@@ -69,16 +75,11 @@ function handleNumber(button) {
 function setOperator(button) {
     const operator = button.textContent;
 
-    if (currentTerm === "" && previousTerm === "") return;
-
-    if (finishedEvaluation) {
+    if (currentTerm ==="" && previousTerm === "") {
+        previousTerm = "0";
         currentOperator = operator;
-        exprDisplay.value = previousTerm + " " + currentOperator;
-        finishedEvaluation = false;
-        return;
-    }
-
-    if (currentTerm === "" && previousTerm !== "") {
+        exprDisplay.value = `${previousTerm} ${currentOperator}`;
+    } else if (currentTerm === "" && previousTerm !== "") {
         currentOperator = operator;
         exprDisplay.value = previousTerm + " " + currentOperator; 
     } else if (currentTerm !== "" && previousTerm === "") {
