@@ -11,10 +11,11 @@ const exprDisplay = document.querySelector(".expr-display");
 const resultDisplay = document.querySelector(".result-display");
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
-const clearButton = document.querySelector("#clear");
 const equalsButton = document.querySelector("#equals");
 const decimalButton = document.querySelector("#decimal");
 const negationButton = document.querySelector("#negation");
+const clearButton = document.querySelector("#clear");
+const ceButton = document.querySelector("#clear-entry");
 
 exprDisplay.value = "";
 resultDisplay.value = "0";
@@ -26,9 +27,13 @@ operatorButtons.forEach(button => {
     button.addEventListener("click", () => setOperator(button));
 });
 equalsButton.addEventListener("click", handleEquals); 
-clearButton.addEventListener("click", reset);
 decimalButton.addEventListener("click", addDecimal);
 negationButton.addEventListener("click", negate);
+clearButton.addEventListener("click", reset);
+ceButton.addEventListener("click", () => {
+    currentTerm = "";
+    resultDisplay.value = "0";
+});
 
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        

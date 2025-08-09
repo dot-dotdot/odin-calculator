@@ -50,3 +50,11 @@ button {
     height: 46px;
     padding: 0;
 }
+
+.bottom-row {
+    display: flex;
+}
+
+#equals {
+    flex-grow: 1;
+}
