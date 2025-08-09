@@ -34,24 +34,7 @@ numberButtons.forEach(button => {
 });
 
 operatorButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        if (currentTerm === "" && previousTerm === "") return;
-
-        previousOperator = currentOperator;
-        currentOperator = button.textContent;
-        
-        if (currentTerm !== "" && previousTerm === "") {
-            previousTerm = currentTerm;
-            exprDisplay.value = previousTerm + " " + currentOperator;
-        } else if (currentTerm !== "" && previousTerm !== "") {
-            previousTerm = "" + calculate(+previousTerm, +currentTerm, previousOperator);
-            exprDisplay.value = previousTerm + " " + currentOperator; 
-            resultDisplay.value = previousTerm;
-        }
-       
-        currentTerm = "";
-        finishedEvaluation = false;
-    });
+    button.addEventListener("click", () => setOperator(button));
 });
 
 equalsButton.addEventListener("click", () => {
@@ -61,9 +44,10 @@ equalsButton.addEventListener("click", () => {
         resultDisplay.value = result;
         previousTerm = result;
         currentTerm = "";
+        currentOperator = null;
         finishedEvaluation = true;
     }
-})
+});
 
 clearButton.addEventListener("click", reset);
 decimalButton.addEventListener("click", addDecimal);
@@ -73,6 +57,35 @@ function calculate(a, b, operator) {
     if (operator === "-") return substract(a, b);
     if (operator === "*") return multiply(a, b);
     if (operator === "/") return divide(a, b);
+}
+
+function setOperator(button) {
+    const operator = button.textContent;
+
+    if (currentTerm === "" && previousTerm === "") return;
+
+    if (finishedEvaluation) {
+        currentOperator = operator;
+        exprDisplay.value = previousTerm + " " + currentOperator;
+        finishedEvaluation = false;
+        return;
+    }
+
+    if (currentTerm === "" && previousTerm !== "") {
+        currentOperator = operator;
+        exprDisplay.value = previousTerm + " " + currentOperator; 
+    } else if (currentTerm !== "" && previousTerm === "") {
+        previousTerm = currentTerm;
+        currentTerm = "";
+        currentOperator = operator;
+        exprDisplay.value = previousTerm + " " + currentOperator;
+    } else if (currentTerm !== "" && previousTerm !== "") {
+        previousTerm = "" + calculate(+previousTerm, +currentTerm, currentOperator);
+        currentTerm = "";
+        currentOperator = operator;
+        exprDisplay.value = previousTerm + " " + currentOperator; 
+        resultDisplay.value = previousTerm;
+    }
 }
 
 function addDecimal() {
