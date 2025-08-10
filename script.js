@@ -61,6 +61,19 @@ function calculate(a, b, operator) {
     if (operator === "/") return divide(a, b);
 }
 
+function operate(term1, term2, operator) {
+    let result = calculate(+term1, +term2, operator);
+
+    if (result === "Error") {
+        setDisplay(resultDisplay, "Error: press C");
+        setDisplay(exprDisplay, "");
+        lockedIfError = true;
+        return null;
+    }
+
+    return result;
+}
+
 function handleNumber(button) {
     if (lockedIfError) return;
 
@@ -85,20 +98,13 @@ function setOperator(button) {
         previousTerm = "0";
     } else if (currentTerm !== "" && previousTerm === "") {
         previousTerm = currentTerm;
-        currentTerm = "";
     } else if (currentTerm !== "" && previousTerm !== "") {
-        previousTerm = String(calculate(+previousTerm, +currentTerm, currentOperator));
-        
-        if (result === "Error") {
-            setDisplay(resultDisplay, "Error");
-            setDisplay(exprDisplay, "");
-            lockedIfError = true;
-            return;
-        }
-
-        currentTerm = "";
+        const result = operate(+previousTerm, +currentTerm, currentOperator);
+        if (result === null) return;
+        previousTerm = String(result);
     }
     
+    currentTerm = "";
     currentOperator = operator;
     setDisplay(exprDisplay, previousTerm, currentOperator); 
     setDisplay(resultDisplay, "0");
@@ -109,14 +115,8 @@ function handleEquals() {
         lastOperator = currentOperator;
         lastTerm = currentTerm;
         
-        const result = calculate(+previousTerm, +currentTerm, currentOperator);
-        
-        if (result === "Error") {
-            setDisplay(resultDisplay, "Error");
-            setDisplay(exprDisplay, "");
-            lockedIfError = true;
-            return;
-        }
+        const result = operate(+previousTerm, +currentTerm, currentOperator);
+        if (result === null) return;
 
         setDisplay(exprDisplay, previousTerm, currentOperator, currentTerm);
         setDisplay(resultDisplay, result);
