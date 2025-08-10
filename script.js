@@ -24,6 +24,7 @@ resultDisplay.value = "0";
 numberButtons.forEach(button => {
     button.addEventListener("click", () => handleNumber(button));
 });
+
 operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
         setOperator(button);
@@ -38,16 +39,16 @@ clearButton.addEventListener("click", reset);
 
 ceButton.addEventListener("click", () => {
     currentTerm = "";
-    resultDisplay.value = "0";
+    setDisplay(resultDisplay, "0");
 });
 
 eraseButton.addEventListener("click", () => {
     if (currentTerm !== "") {
         currentTerm = currentTerm.slice(0, -1);
-        resultDisplay.value = currentTerm;
+        setDisplay(resultDisplay, currentTerm);
 
         if (currentTerm === "") {
-            resultDisplay.value = "0";
+            setDisplay(resultDisplay, "0");
         }
     }
 })
@@ -65,11 +66,11 @@ function handleNumber(button) {
         previousTerm = "";
         currentOperator = null;
         finishedEvaluation = false;
-        exprDisplay.value = "";
+        setDisplay(exprDisplay, "");
     }
 
     currentTerm += button.textContent;
-    resultDisplay.value = currentTerm;
+    setDisplay(resultDisplay, currentTerm);
 }
 
 function setOperator(button) {
@@ -83,11 +84,11 @@ function setOperator(button) {
     } else if (currentTerm !== "" && previousTerm !== "") {
         previousTerm = String(calculate(+previousTerm, +currentTerm, currentOperator));
         currentTerm = "";
-        resultDisplay.value = previousTerm;
+        setDisplay(resultDisplay, previousTerm);
     }
 
     currentOperator = operator;
-    setExprDisplayValue(previousTerm, currentOperator); 
+    setDisplay(exprDisplay ,previousTerm, currentOperator); 
 }
 
 function handleEquals() {
@@ -96,8 +97,8 @@ function handleEquals() {
         lastTerm = currentTerm;
         
         const result = calculate(+previousTerm, +currentTerm, currentOperator);
-        setExprDisplayValue(previousTerm, currentOperator, currentTerm);
-        resultDisplay.value = result;
+        setDisplay(exprDisplay, previousTerm, currentOperator, currentTerm);
+        setDisplay(resultDisplay, result);
         previousTerm = String(result);
 
         currentTerm = "";
@@ -105,8 +106,8 @@ function handleEquals() {
         finishedEvaluation = true;
     } else if (finishedEvaluation && lastOperator && lastTerm) {
         const result = calculate(+previousTerm, +lastTerm, lastOperator);
-        setExprDisplayValue(previousTerm, lastOperator, lastTerm);
-        resultDisplay.value = result;
+        setDisplay(exprDisplay, previousTerm, lastOperator, lastTerm);
+        setDisplay(resultDisplay, result);
         previousTerm = String(result);
     }
 }
@@ -117,13 +118,13 @@ function addDecimal() {
         previousTerm = "";
         currentOperator = null;
         finishedEvaluation = false;
-        resultDisplay.value = currentTerm;
+        setDisplay(resultDisplay, currentTerm);
         return;
     }
 
     if (!currentTerm.includes(".")) {
         currentTerm = currentTerm === "" ? "0." : currentTerm + ".";
-        resultDisplay.value = currentTerm;
+        setDisplay(resultDisplay, currentTerm);
     }
 }
 
@@ -131,16 +132,18 @@ function addDecimal() {
 function negate() {
     if (currentTerm) {
         currentTerm = String(parseFloat(currentTerm) * -1);
-        resultDisplay.value = currentTerm;
-    }
+        setDisplay(resultDisplay, currentTerm);
+    } 
 }
 
-function setExprDisplayValue(term1, operator, term2) {
-    if (typeof term2 === "undefined") {
+function setDisplay(display, term1, operator, term2) {
+    if (typeof term2 === "undefined" && typeof operator === "undefined") {
+        display.value = term1;
+    } else if (typeof term2 === "undefined") {
         exprDisplay.value = `${term1} ${operator}`;
     } else {
         exprDisplay.value = `${term1} ${operator} ${term2} =`;
-    }
+    } 
 }
 
 function add(a, b) {
