@@ -51,7 +51,7 @@ eraseButton.addEventListener("click", () => {
             setDisplay(resultDisplay, "0");
         }
     }
-})
+});
 
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        
@@ -88,7 +88,7 @@ function setOperator(button) {
     }
 
     currentOperator = operator;
-    setDisplay(exprDisplay ,previousTerm, currentOperator); 
+    setDisplay(exprDisplay, previousTerm, currentOperator); 
 }
 
 function handleEquals() {
@@ -128,17 +128,38 @@ function addDecimal() {
     }
 }
 
-// This is the most basic negation function. Only works with user input form numpad.
+// With this function you cannot flip the sign and then enter a number.
 function negate() {
+    if (currentTerm === "0") return;
+
     if (currentTerm) {
+        if (currentTerm === "0.") {
+            currentTerm = "-0.";
+            setDisplay(resultDisplay, currentTerm);
+            return;
+        } else if (currentTerm === "-0.") {
+            currentTerm = "0.";
+            setDisplay(resultDisplay, currentTerm);
+            return;
+        }
+
         currentTerm = String(parseFloat(currentTerm) * -1);
         setDisplay(resultDisplay, currentTerm);
+    } else if (previousTerm) {
+        previousTerm = String(parseFloat(previousTerm) * -1);
+
+        if (currentOperator) {
+            setDisplay(exprDisplay, previousTerm, currentOperator);
+        } else if (!currentOperator) {
+            setDisplay(exprDisplay, previousTerm);
+            setDisplay(resultDisplay, previousTerm);
+        }
     } 
 }
 
 function setDisplay(display, term1, operator, term2) {
     if (typeof term2 === "undefined" && typeof operator === "undefined") {
-        display.value = term1;
+        display.value = `${term1}`;
     } else if (typeof term2 === "undefined") {
         exprDisplay.value = `${term1} ${operator}`;
     } else {
