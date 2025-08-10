@@ -4,6 +4,7 @@ let currentTerm = "";
 let previousTerm = "";
 let currentOperator = null;
 let finishedEvaluation = false;
+let lockedIfError = false;
 let lastOperator = null;
 let lastTerm = null;
 
@@ -61,12 +62,14 @@ function calculate(a, b, operator) {
 }
 
 function handleNumber(button) {
+    if (lockedIfError) return;
+
     if (finishedEvaluation) {
         currentTerm = "";
         previousTerm = "";
         currentOperator = null;
         finishedEvaluation = false;
-        setDisplay(exprDisplay, "");
+        setDisplay(exprDisplay, currentTerm);
     }
 
     currentTerm += button.textContent;
@@ -74,6 +77,8 @@ function handleNumber(button) {
 }
 
 function setOperator(button) {
+    if (lockedIfError) return;
+
     const operator = button.textContent;
 
     if (currentTerm ==="" && previousTerm === "") {
@@ -83,12 +88,20 @@ function setOperator(button) {
         currentTerm = "";
     } else if (currentTerm !== "" && previousTerm !== "") {
         previousTerm = String(calculate(+previousTerm, +currentTerm, currentOperator));
-        currentTerm = "";
-        setDisplay(resultDisplay, previousTerm);
-    }
+        
+        if (result === "Error") {
+            setDisplay(resultDisplay, "Error");
+            setDisplay(exprDisplay, "");
+            lockedIfError = true;
+            return;
+        }
 
+        currentTerm = "";
+    }
+    
     currentOperator = operator;
     setDisplay(exprDisplay, previousTerm, currentOperator); 
+    setDisplay(resultDisplay, "0");
 }
 
 function handleEquals() {
@@ -97,11 +110,19 @@ function handleEquals() {
         lastTerm = currentTerm;
         
         const result = calculate(+previousTerm, +currentTerm, currentOperator);
+        
+        if (result === "Error") {
+            setDisplay(resultDisplay, "Error");
+            setDisplay(exprDisplay, "");
+            lockedIfError = true;
+            return;
+        }
+
         setDisplay(exprDisplay, previousTerm, currentOperator, currentTerm);
         setDisplay(resultDisplay, result);
         previousTerm = String(result);
 
-        currentTerm = "";
+        currentTerm = ""; 
         currentOperator = null;
         finishedEvaluation = true;
     } else if (finishedEvaluation && lastOperator && lastTerm) {
@@ -180,9 +201,8 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-    if (b !== 0) {
-        return a / b;
-    }
+    if (b === 0) return "Error";
+    return a / b;
 }
 
 function reset() {
@@ -193,4 +213,6 @@ function reset() {
     currentOperator = null;
     exprDisplay.value = "";
     resultDisplay.value = "0";
+    finishedEvaluation = false;
+    lockedIfError = false;
 }
