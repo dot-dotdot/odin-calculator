@@ -19,6 +19,15 @@ const clearButton = document.querySelector("#clear");
 const ceButton = document.querySelector("#clear-entry");
 const eraseButton = document.querySelector("#erase");
 
+const keyMap = {
+    "Backspace": eraseButton,
+    "Delete": ceButton,
+    "Enter": equalsButton,
+    "*": document.querySelector("#mult"),
+    "/": document.querySelector("#divide"),
+    "n": negationButton,
+};
+
 exprDisplay.value = "";
 resultDisplay.value = "0";
 
@@ -54,11 +63,23 @@ eraseButton.addEventListener("click", () => {
     }
 });
 
+document.addEventListener("keydown", (event) => {
+    let key = event.key;
+    const button = keyMap[key] 
+        ? keyMap[key]
+        : document.querySelector(`button[data-key="${key}"]`);
+
+    if (button) {
+        button.click();
+        event.preventDefault();
+    }
+});
+
 function calculate(a, b, operator) {
     if (operator === "+") return add(a, b);        
     if (operator === "-") return substract(a, b);
-    if (operator === "*") return multiply(a, b);
-    if (operator === "/") return divide(a, b);
+    if (operator === "×") return multiply(a, b);
+    if (operator === "÷") return divide(a, b);
 }
 
 function operate(term1, term2, operator) {
