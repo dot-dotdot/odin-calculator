@@ -97,11 +97,11 @@ function setOperator(button) {
     if (currentTerm ==="" && previousTerm === "") {
         previousTerm = "0";
     } else if (currentTerm !== "" && previousTerm === "") {
-        previousTerm = currentTerm;
+        previousTerm = format(currentTerm);
     } else if (currentTerm !== "" && previousTerm !== "") {
-        const result = operate(+previousTerm, +currentTerm, currentOperator);
+        const result = format(operate(+previousTerm, +currentTerm, currentOperator));
         if (result === null) return;
-        previousTerm = String(result);
+        previousTerm = result;
     }
     
     currentTerm = "";
@@ -115,21 +115,21 @@ function handleEquals() {
         lastOperator = currentOperator;
         lastTerm = currentTerm;
         
-        const result = operate(+previousTerm, +currentTerm, currentOperator);
+        const result = format(operate(+previousTerm, +currentTerm, currentOperator));
         if (result === null) return;
 
         setDisplay(exprDisplay, previousTerm, currentOperator, currentTerm);
         setDisplay(resultDisplay, result);
-        previousTerm = String(result);
+        previousTerm = result;
 
         currentTerm = ""; 
         currentOperator = null;
         finishedEvaluation = true;
     } else if (finishedEvaluation && lastOperator && lastTerm) {
-        const result = calculate(+previousTerm, +lastTerm, lastOperator);
+        const result = format(calculate(+previousTerm, +lastTerm, lastOperator));
         setDisplay(exprDisplay, previousTerm, lastOperator, lastTerm);
         setDisplay(resultDisplay, result);
-        previousTerm = String(result);
+        previousTerm = result;
     }
 }
 
@@ -186,6 +186,22 @@ function setDisplay(display, term1, operator, term2) {
     } else {
         exprDisplay.value = `${term1} ${operator} ${term2} =`;
     } 
+}
+
+function format(number) {
+    const maxLength = 15;
+
+    let numString = number.toString();
+
+    if (numString.length > maxLength) {
+        if (Math.abs(number) > 1e-6 && Math.abs(number) < 1e12) {
+            numString = parseFloat(number.toFixed(maxLength - 2)).toString();
+        } else {
+            numString = number.toExponential(maxLength - 6);
+        }
+    }
+
+    return numString;
 }
 
 function add(a, b) {
