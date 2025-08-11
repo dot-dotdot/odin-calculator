@@ -28,13 +28,10 @@ body {
 .calculator-container {
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
-}
-
-.num-block {
-    display: flex;
-    flex-wrap: wrap;
-    width: 240px;
+    border-radius: 6%;
+    padding: 20px;
+    margin-top: 80px;
+    background-color: #5a5d64;
 }
 
 .operator-block {
@@ -42,15 +39,28 @@ body {
 }
 
 .buttons {
+    max-width: 335px;
     display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    gap: 5px;
 }
 
 button {
     width:80px;
-    height: 46px;
+    height: 48px;
     padding: 0;
 }
 
 .bottom-row {
     display: flex;
+}
+
+.operator,
+.function {
+    background-color: #93867F;
+}
+
+#equals {
+    background-color: #df7234;
 }
