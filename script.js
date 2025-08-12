@@ -214,19 +214,21 @@ function setDisplay(display, term1, operator, term2) {
     } 
 }
 
-// Format function still needs some work - there is overflow in certain situations
-function format(number) {
-    let numString = number.toString();
+function format(input) {
+    if (input === 0) return "0";
 
-    if (numString.length > MAX_DIGITS) {
-        if (Math.abs(number) > 1e-6 || Math.abs(number) < 1e12) {
-            numString = parseFloat(number.toFixed(MAX_DIGITS - 2)).toString();
-        } else {
-            numString = number.toExponential(MAX_DIGITS - 6);
-        }
+    const number = Number(input);
+    const numberAbs = Math.abs(number);
+
+    if (numberAbs >= Math.pow(10, MAX_DIGITS) 
+        || numberAbs < Math.pow(10, -MAX_DIGITS + 2)) {
+        return parseFloat(number.toExponential(MAX_DIGITS - 4)).toString();
     }
 
-    return numString;
+    const integerLength = Math.floor(numberAbs).toString().length;
+    const maxDecimals = Math.max(0, MAX_DIGITS - integerLength);
+
+    return parseFloat(number.toFixed(maxDecimals)).toString(); 
 }
 
 function add(a, b) {
