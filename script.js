@@ -216,6 +216,7 @@ function setDisplay(display, term1, operator, term2) {
 
 function format(input) {
     if (input === 0) return "0";
+    if (input === null) return null;
 
     const number = Number(input);
     const numberAbs = Math.abs(number);
