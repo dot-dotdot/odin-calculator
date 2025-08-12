@@ -1,5 +1,6 @@
 "use strict";
 
+const MAX_DIGITS = 14;
 let currentTerm = "";
 let previousTerm = "";
 let currentOperator = null;
@@ -48,8 +49,10 @@ negationButton.addEventListener("click", negate);
 clearButton.addEventListener("click", reset);
 
 ceButton.addEventListener("click", () => {
-    currentTerm = "";
-    setDisplay(resultDisplay, "0");
+    if (!finishedEvaluation) {
+        currentTerm = "";
+        setDisplay(resultDisplay, "0");
+    }
 });
 
 eraseButton.addEventListener("click", () => {
@@ -97,6 +100,8 @@ function operate(term1, term2, operator) {
 
 function handleNumber(button) {
     if (lockedIfError) return;
+
+    if (currentTerm.replace(".", "").length >= MAX_DIGITS) return;
 
     if (finishedEvaluation) {
         currentTerm = "";
@@ -210,7 +215,7 @@ function setDisplay(display, term1, operator, term2) {
 }
 
 function format(number) {
-    const maxLength = 15;
+    const maxLength = 14;
 
     let numString = number.toString();
 
