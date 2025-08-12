@@ -215,7 +215,7 @@ function setDisplay(display, term1, operator, term2) {
 }
 
 function format(number) {
-    const maxLength = 14;
+    const maxLength = 10;
 
     let numString = number.toString();
 
