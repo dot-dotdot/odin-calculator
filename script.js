@@ -214,16 +214,15 @@ function setDisplay(display, term1, operator, term2) {
     } 
 }
 
+// Format function still needs some work - there is overflow in certain situations
 function format(number) {
-    const maxLength = 10;
-
     let numString = number.toString();
 
-    if (numString.length > maxLength) {
-        if (Math.abs(number) > 1e-6 && Math.abs(number) < 1e12) {
-            numString = parseFloat(number.toFixed(maxLength - 2)).toString();
+    if (numString.length > MAX_DIGITS) {
+        if (Math.abs(number) > 1e-6 || Math.abs(number) < 1e12) {
+            numString = parseFloat(number.toFixed(MAX_DIGITS - 2)).toString();
         } else {
-            numString = number.toExponential(maxLength - 6);
+            numString = number.toExponential(MAX_DIGITS - 6);
         }
     }
 
