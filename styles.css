@@ -105,3 +105,27 @@ button {
 #negation:hover {
     background-color: #c5baad;
 }
+
+.info {
+    position: relative;
+    bottom: 480px;
+    left: 416px;
+}
+
+ul {
+    list-style-type: none;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    color: rgb(118, 103, 103);
+}
+
+li {
+    margin: 16px;
+}
+
+.key {
+    border: 2px solid rgb(118, 103, 103);
+    border-radius: 5px;
+    padding: 2px 4px;
+    font-weight: 500;
+}
