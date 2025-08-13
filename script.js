@@ -1,6 +1,6 @@
 "use strict";
 
-const MAX_DIGITS = 14;
+const MAX_DIGITS = 12;
 let currentTerm = "";
 let previousTerm = "";
 let currentOperator = null;
@@ -88,7 +88,7 @@ function calculate(a, b, operator) {
 function operate(term1, term2, operator) {
     let result = calculate(+term1, +term2, operator);
 
-    if (result === "Error") {
+    if (result === "Error" || !isSafeNumber(result)) {
         setDisplay(resultDisplay, "Error: press C");
         setDisplay(exprDisplay, "");
         lockedIfError = true;
@@ -152,7 +152,9 @@ function handleEquals() {
         currentOperator = null;
         finishedEvaluation = true;
     } else if (finishedEvaluation && lastOperator && lastTerm) {
-        const result = format(calculate(+previousTerm, +lastTerm, lastOperator));
+        const result = format(operate(+previousTerm, +lastTerm, lastOperator));
+        if (result === null) return;
+
         setDisplay(exprDisplay, previousTerm, lastOperator, lastTerm);
         setDisplay(resultDisplay, result);
         previousTerm = result;
@@ -230,6 +232,14 @@ function format(input) {
     const maxDecimals = Math.max(0, MAX_DIGITS - integerLength);
 
     return parseFloat(number.toFixed(maxDecimals)).toString(); 
+}
+
+function isSafeNumber(number) {
+    return (
+        typeof number === "number" &&
+        isFinite(number) &&
+        Math.abs(number) <= Number.MAX_VALUE
+    );
 }
 
 function add(a, b) {
