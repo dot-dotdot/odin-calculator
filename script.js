@@ -225,7 +225,7 @@ function format(input) {
 
     if (numberAbs >= Math.pow(10, MAX_DIGITS) 
         || numberAbs < Math.pow(10, -MAX_DIGITS + 2)) {
-        return parseFloat(number.toExponential(MAX_DIGITS - 4)).toString();
+        return parseFloat(number.toExponential(MAX_DIGITS - 3)).toString();
     }
 
     const integerLength = Math.floor(numberAbs).toString().length;
@@ -237,8 +237,8 @@ function format(input) {
 function isSafeNumber(number) {
     return (
         typeof number === "number" &&
-        isFinite(number) &&
-        Math.abs(number) <= Number.MAX_VALUE
+        Number.isFinite(number) &&
+        Math.abs(number) <= Number.MAX_SAFE_INTEGER
     );
 }
 
